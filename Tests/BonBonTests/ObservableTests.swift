@@ -46,6 +46,15 @@ final class ObservableTests: XCTestCase {
 		XCTAssertNil(expectedUpdate)
 	}
 
+	func test_whenObservableUpdates_andItsMappedToAnother_thenTheOtherNotifiesObservers() {
+		let observableNumber = Observable(0)
+		let observableString = observableNumber.map(String.init)
+		var expectedUpdate: (String, String)?
+		observableString.subscribe(self, onUpdate: { expectedUpdate = $0 })
+		observableNumber.value = 1
+		XCTAssert(expectedUpdate! == ("0", "1"))
+	}
+
 	static var allTests: [(String, (ObservableTests) -> () throws -> Void)] {
 		return [
 			("test_whenObservableUpdates_thenItNotifiesObservers", test_whenObservableUpdates_thenItNotifiesObservers),

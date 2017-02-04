@@ -58,3 +58,13 @@ extension Observable where Observed: Equatable {
 		})
 	}
 }
+
+extension Observable {
+	public func map <T> (_ transform: @escaping (Observed) -> T) -> Observable<T> {
+		let mappedObservable = Observable<T>(transform(value))
+		subscribe(mappedObservable, onUpdate: { [weak mappedObservable] oldValue, newValue in
+			mappedObservable?.value = transform(newValue)
+		})
+		return mappedObservable
+	}
+}
