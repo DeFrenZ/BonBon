@@ -67,4 +67,12 @@ extension Observable {
 		})
 		return mappedObservable
 	}
+
+	public func flatMap <T> (_ transform: @escaping (Observed) -> Observable<T>) -> Observable<T> {
+		let mappedObservable = transform(value)
+		subscribe(mappedObservable, onUpdate: { [weak mappedObservable] oldValue, newValue in
+			mappedObservable?.value = transform(newValue).value
+		})
+		return mappedObservable
+	}
 }
