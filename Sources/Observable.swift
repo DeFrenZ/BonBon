@@ -1,9 +1,17 @@
 public final class Observable<Observed> {
-    private var observers: [UpdateAction] = []
+	// MARK: - Private implementation
+	
+	private var actionsPerObject: [ObjectIdentifier: UpdateAction] = [:]
+
+	private var actions: AnySequence<UpdateAction> {
+		return AnySequence(actionsPerObject.values)
+	}
 
     private func notifyObservers(from oldValue: Observed, to newValue: Observed) {
-        observers.forEach { $0(oldValue, newValue) }
+        actions.forEach { $0(oldValue, newValue) }
     }
+
+	// MARK: - Public interface
 
     public typealias UpdateAction = (Observed, Observed) -> Void
 
@@ -15,14 +23,20 @@ public final class Observable<Observed> {
         self.value = value
     }
 
-    public func subscribe(onUpdate: @escaping UpdateAction) {
-        observers.append(onUpdate)
+	public func subscribe(_ observer: AnyObject, onUpdate: @escaping UpdateAction) {
+		let identifier = ObjectIdentifier(observer)
+		actionsPerObject[identifier] = onUpdate
     }
+
+	public func unsubscribe(_ observer: AnyObject) {
+		let identifier = ObjectIdentifier(observer)
+		actionsPerObject[identifier] = nil
+	}
 }
 
 extension Observable where Observed: Equatable {
-	public func subscribe(onChange: @escaping UpdateAction) {
-		subscribe(onUpdate: { oldValue, newValue in
+	public func subscribe(_ observer: AnyObject, onChange: @escaping UpdateAction) {
+		subscribe(observer, onUpdate: { oldValue, newValue in
 			guard newValue != oldValue else { return }
 			onChange(oldValue, newValue)
 		})
