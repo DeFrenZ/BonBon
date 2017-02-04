@@ -19,3 +19,12 @@ public final class Observable<Observed> {
         observers.append(onUpdate)
     }
 }
+
+extension Observable where Observed: Equatable {
+	public func subscribe(onChange: @escaping UpdateAction) {
+		subscribe(onUpdate: { oldValue, newValue in
+			guard newValue != oldValue else { return }
+			onChange(oldValue, newValue)
+		})
+	}
+}
