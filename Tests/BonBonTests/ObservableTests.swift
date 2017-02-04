@@ -39,7 +39,7 @@ final class ObservableTests: XCTestCase {
 		let observableNumber = Observable(0)
 		var expectedUpdate: (Int, Int)?
 		do {
-			let observer = Observer()
+			let observer = SubscriptionOwner()
 			observableNumber.subscribe(observer, onUpdate: { expectedUpdate = $0 })
 		}
 		observableNumber.value = 1
@@ -76,5 +76,3 @@ final class ObservableTests: XCTestCase {
 		]
 	}
 }
-
-private class Observer {}

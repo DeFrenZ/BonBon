@@ -153,3 +153,9 @@ extension Observable {
 		return mappedObservable
 	}
 }
+
+/// An empty reference. It's only purpose is to be used to subscribe to an
+/// `Observable` when there's no more fitting object to use as the observer.
+public final class SubscriptionOwner {
+	public init() {}
+}
