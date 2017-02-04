@@ -33,7 +33,15 @@ public final class Observable<Observed> {
 
 	public func subscribe(_ observer: AnyObject, onUpdate: @escaping UpdateAction) {
 		let identifier = ObjectIdentifier(observer)
-		addObserver(with: identifier, onUpdate: onUpdate)
+		let autoreleasingOnUpdate: UpdateAction = { [weak self, weak observer] oldValue, newValue in
+			guard let _self = self else { return }
+			guard observer != nil else {
+				_self.removeObserver(with: identifier)
+				return
+			}
+			onUpdate(oldValue, newValue)
+		}
+		addObserver(with: identifier, onUpdate: autoreleasingOnUpdate)
     }
 
 	public func unsubscribe(_ observer: AnyObject) {

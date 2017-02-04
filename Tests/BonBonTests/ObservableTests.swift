@@ -35,6 +35,17 @@ final class ObservableTests: XCTestCase {
 		XCTAssertNil(expectedUpdate)
 	}
 
+	func test_whenObservableUpdates_andAnObserverGotReleased_thenItDoesntNotifyIt() {
+		let observableNumber = Observable(0)
+		var expectedUpdate: (Int, Int)?
+		do {
+			let observer = Observer()
+			observableNumber.subscribe(observer, onUpdate: { expectedUpdate = $0 })
+		}
+		observableNumber.value = 1
+		XCTAssertNil(expectedUpdate)
+	}
+
 	static var allTests: [(String, (ObservableTests) -> () throws -> Void)] {
 		return [
 			("test_whenObservableUpdates_thenItNotifiesObservers", test_whenObservableUpdates_thenItNotifiesObservers),
@@ -44,3 +55,5 @@ final class ObservableTests: XCTestCase {
 		]
 	}
 }
+
+private class Observer {}
