@@ -7,6 +7,14 @@ public final class Observable<Observed> {
 		return AnySequence(actionsPerObject.values)
 	}
 
+	private func addObserver(with identifier: ObjectIdentifier, onUpdate: @escaping UpdateAction) {
+		actionsPerObject[identifier] = onUpdate
+	}
+
+	private func removeObserver(with identifier: ObjectIdentifier) {
+		actionsPerObject[identifier] = nil
+	}
+
     private func notifyObservers(from oldValue: Observed, to newValue: Observed) {
         actions.forEach { $0(oldValue, newValue) }
     }
@@ -25,12 +33,12 @@ public final class Observable<Observed> {
 
 	public func subscribe(_ observer: AnyObject, onUpdate: @escaping UpdateAction) {
 		let identifier = ObjectIdentifier(observer)
-		actionsPerObject[identifier] = onUpdate
+		addObserver(with: identifier, onUpdate: onUpdate)
     }
 
 	public func unsubscribe(_ observer: AnyObject) {
 		let identifier = ObjectIdentifier(observer)
-		actionsPerObject[identifier] = nil
+		removeObserver(with: identifier)
 	}
 }
 
