@@ -2,11 +2,16 @@ import XCTest
 import BonBon
 
 final class SynchronizedTests: AsynchronousTestCase {
-	var syncNumber: Synchronized<Int>!
+	// MARK: Setup
+
+	private var syncNumber: Synchronized<Int>!
+
 	override func setUp() {
 		super.setUp()
 		syncNumber = Synchronized(0)
 	}
+
+	// MARK: Unit tests
 
 	func test_whenSynchronizedAccessesArePerformedConcurrently_thenOnlyOneAtATimeExecutes() {
 		queue.async {
@@ -18,5 +23,13 @@ final class SynchronizedTests: AsynchronousTestCase {
 
 		sleep(for: shortWait)
 		XCTAssertEqual(syncNumber.value, 1)
+	}
+
+	// MARK: Linux support
+
+	static var allTests: [(String, (SynchronizedTests) -> () throws -> Void)] {
+		return [
+			("test_whenSynchronizedAccessesArePerformedConcurrently_thenOnlyOneAtATimeExecutes", test_whenSynchronizedAccessesArePerformedConcurrently_thenOnlyOneAtATimeExecutes),
+		]
 	}
 }

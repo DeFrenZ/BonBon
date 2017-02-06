@@ -2,9 +2,12 @@ import XCTest
 import BonBon
 
 final class ObservableTests: XCTestCase {
-	var observableNumber: Observable<Int>!
-	var expectedUpdate: (Int, Int)?
-	var expectedMappedUpdate: (String, String)?
+	// MARK: Setup
+
+	private var observableNumber: Observable<Int>!
+	private var expectedUpdate: (Int, Int)?
+	private var expectedMappedUpdate: (String, String)?
+
 	override func setUp() {
 		super.setUp()
 
@@ -12,6 +15,8 @@ final class ObservableTests: XCTestCase {
 		expectedUpdate = nil
 		expectedMappedUpdate = nil
 	}
+
+	// MARK: Unit tests
 
 	func test_whenObservableUpdates_thenItNotifiesObservers() {
 		observableNumber.subscribe(self, onUpdate: { self.expectedUpdate = $0 })
@@ -60,6 +65,8 @@ final class ObservableTests: XCTestCase {
 		observableNumber.value = 1
 		XCTAssert(expectedMappedUpdate! == ("0", "1"))
 	}
+
+	// MARK: Linux support
 
 	static var allTests: [(String, (ObservableTests) -> () throws -> Void)] {
 		return [
