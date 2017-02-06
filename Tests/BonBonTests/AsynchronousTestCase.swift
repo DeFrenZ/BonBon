@@ -1,4 +1,5 @@
-import XCTest
+import Dispatch
+import class XCTest.XCTestCase
 
 class AsynchronousTestCase: XCTestCase {
 	var queue: DispatchQueue!

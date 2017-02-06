@@ -1,4 +1,4 @@
-import Darwin.POSIX.pthread
+import Darwin
 
 ///	- seealso: [Lock](https://en.wikipedia.org/wiki/Lock_(computer_science))
 protocol Lock {
