@@ -3,13 +3,13 @@ import Dispatch
 import struct Foundation.TimeInterval
 
 func sleep(for timeInterval: TimeInterval) {
-	let microSeconds: useconds_t = .init(timeInterval * 1_000_000)
+	let microSeconds: useconds_t = .init(timeInterval * Double(USEC_PER_SEC))
 	usleep(microSeconds)
 }
 
 extension DispatchGroup {
 	func wait(for timeInterval: TimeInterval) -> DispatchTimeoutResult {
-		let dispatchTime = DispatchTime.now() + (timeInterval * 1_000_000_000)
+		let dispatchTime = DispatchTime.now() + (timeInterval * Double(NSEC_PER_SEC))
 		return wait(timeout: dispatchTime)
 	}
 }
