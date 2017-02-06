@@ -2,13 +2,15 @@ import XCTest
 @testable import BonBon
 
 final class LockTests: AsynchronousTestCase {
+	var mutex: MutexLock!
+	var readWrite: ReadWriteLock!
 	var locks: [Lock]!
 	var concurrentLocks: [ConcurrentLock]!
 	override func setUp() {
 		super.setUp()
 
-		let mutex = MutexLock()
-		let readWrite = ReadWriteLock()
+		mutex = MutexLock()
+		readWrite = ReadWriteLock()
 		locks = [mutex, readWrite]
 		concurrentLocks = [readWrite]
 	}
@@ -46,4 +48,24 @@ final class LockTests: AsynchronousTestCase {
 			}
 		}
 	}
+
+	func test_whenUsingAMutexLock_thenPerformanceDoesntRegress() {
+		measure(times: numberOfRunsInPerformanceTest) {
+			self.mutex.sync {}
+		}
+	}
+
+	func test_whenUsingAReadWriteLock_thenPerformanceDoesntRegress() {
+		measure(times: numberOfRunsInPerformanceTest) {
+			self.readWrite.sync {}
+		}
+	}
+
+	func test_whenUsingAConcurrentLock_andAccessingConcurrently_thenPerformanceDoesntRegress() {
+		measure(times: numberOfRunsInPerformanceTest) {
+			self.readWrite.concurrentSync {}
+		}
+	}
 }
+
+private let numberOfRunsInPerformanceTest = 1_000_000
