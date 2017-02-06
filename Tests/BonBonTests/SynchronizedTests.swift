@@ -14,12 +14,12 @@ final class SynchronizedTests: XCTestCase {
 	func test_whenSynchronizedAccessesArePerformedConcurrently_thenOnlyOneAtATimeExecutes() {
 		queue.async {
 			self.syncNumber.atomicallyUpdate {
-				sleep(for: 0.05)
+				sleep(for: shortWaitLimit)
 				$0 += 1
 			}
 		}
 
-		sleep(for: 0.01)
+		sleep(for: shortWait)
 		XCTAssertEqual(syncNumber.value, 1)
 	}
 }

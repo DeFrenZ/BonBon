@@ -14,3 +14,5 @@ extension DispatchGroup {
 	}
 }
 
+let shortWait: TimeInterval = 0.001
+let shortWaitLimit: TimeInterval = shortWait * 2

@@ -22,12 +22,12 @@ final class LockTests: XCTestCase {
 			var number = 0
 			queue.async {
 				lock.sync {
-					sleep(for: 0.05)
+					sleep(for: shortWaitLimit)
 					number += 1
 				}
 			}
 
-			sleep(for: 0.01)
+			sleep(for: shortWait)
 			lock.sync {
 				XCTAssertEqual(number, 1, "The second access should wait for the first one to complete.")
 			}
@@ -40,11 +40,11 @@ final class LockTests: XCTestCase {
 			for _ in 0 ..< numberOfConcurrentTasks {
 				queue.async(group: group) {
 					lock.concurrentSync {
-						sleep(for: 0.01)
+						sleep(for: shortWait)
 					}
 				}
 			}
-			guard group.wait(for: 0.05) == .success else {
+			guard group.wait(for: shortWaitLimit) == .success else {
 				XCTFail("Concurrent accesses should complete within the given time.")
 				return
 			}
