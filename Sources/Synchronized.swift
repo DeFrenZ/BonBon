@@ -18,11 +18,13 @@
 ///		sequentially the gap between them is not. In these cases perform these
 ///		multiple actions inside an `atomicallyUpdate` call. E.g.
 ///		`number.atomicallyUpdate { $0 += 1 }`.
-///	- warning: There is no way to enforce this, but if the wrapped type is a
-///		reference one then it's possible for the consumer to retrieve the value
-///		in a thread-safe manner, but then edit it in a non-thread-safe way after
-///		the reference is outside the wrapper. As such, it's highly suggested to
-///		only wrap types with reference semantics.
+///	- warning: There is no way to enforce this, but if the wrapped type has
+///		reference semantics then it's possible for the consumer to retrieve the
+///		value in a thread-safe manner, but then edit it in a non-thread-safe way
+///		after the reference is outside the wrapper. As such, it's highly
+///		suggested to only wrap types with value semantics.
+///	- seealso: [Synchronization]
+///		(https://en.wikipedia.org/wiki/Synchronization_(computer_science))
 public final class Synchronized<Wrapped> {
 	// MARK: Private implementation
 	

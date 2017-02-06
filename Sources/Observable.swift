@@ -5,11 +5,11 @@
 ///	deallocated it automatically gets unsubsribed.
 ///
 ///	- warning: The observer doesn't listen to the wrapped value changes, so if
-///		`Observed` is a reference type notifications of its update will be given
-///		only when the reference gets updated, and not when the referenced value
-///		does.
-///	- seealso:
-///		[Observer Pattern](https://en.wikipedia.org/wiki/Observer_pattern)
+///		`Observed` has reference semantics notifications of its update will be
+///		given only when the reference gets updated, and not when the referenced
+///		value does.
+///	- seealso: [Observer Pattern]
+///		(https://en.wikipedia.org/wiki/Observer_pattern)
 public final class Observable<Observed> {
 	// MARK: - Private implementation
 	

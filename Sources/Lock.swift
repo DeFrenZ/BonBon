@@ -1,5 +1,6 @@
 import Darwin.POSIX.pthread
 
+///	- seealso: [Lock](https://en.wikipedia.org/wiki/Lock_(computer_science))
 protocol Lock {
 	init()
 	func sync <T> (_ perform: () throws -> T) rethrows -> T
