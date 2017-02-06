@@ -1,14 +1,11 @@
 import XCTest
 import BonBon
 
-final class SynchronizedTests: XCTestCase {
+final class SynchronizedTests: AsynchronousTestCase {
 	var syncNumber: Synchronized<Int>!
-	var queue: DispatchQueue!
 	override func setUp() {
 		super.setUp()
-
 		syncNumber = Synchronized(0)
-		queue = DispatchQueue(label: "\(invocation!.selector)", attributes: .concurrent)
 	}
 
 	func test_whenSynchronizedAccessesArePerformedConcurrently_thenOnlyOneAtATimeExecutes() {

@@ -1,11 +1,9 @@
 import XCTest
 @testable import BonBon
 
-final class LockTests: XCTestCase {
+final class LockTests: AsynchronousTestCase {
 	var locks: [Lock]!
 	var concurrentLocks: [ConcurrentLock]!
-	var queue: DispatchQueue!
-	var group: DispatchGroup!
 	override func setUp() {
 		super.setUp()
 
@@ -13,8 +11,6 @@ final class LockTests: XCTestCase {
 		let readWrite = ReadWriteLock()
 		locks = [mutex, readWrite]
 		concurrentLocks = [readWrite]
-		queue = DispatchQueue(label: "\(invocation!.selector)", attributes: .concurrent)
-		group = DispatchGroup()
 	}
 
 	func test_whenNonConcurrentAccessesAreRequestedAtTheSameTime_thenOnlyOneAtATimeExecutes() {
