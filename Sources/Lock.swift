@@ -1,4 +1,4 @@
-// MARK: - Lock
+// MARK: -
 
 ///	- seealso: [Lock](https://en.wikipedia.org/wiki/Lock_(computer_science))
 protocol Lock {
@@ -6,7 +6,7 @@ protocol Lock {
 	func sync <T> (_ perform: () throws -> T) rethrows -> T
 }
 
-// MARK: - UnbalancedLock
+// MARK: -
 
 protocol UnbalancedLock: Lock {
 	func lock()
@@ -21,13 +21,13 @@ extension UnbalancedLock {
 	}
 }
 
-// MARK: - ConcurrentLock
+// MARK: -
 
 protocol ConcurrentLock: Lock {
 	func concurrentSync <T> (_ perform: () throws -> T) rethrows -> T
 }
 
-// MARK: - ConcurrentUnbalancedLock
+// MARK: -
 
 protocol ConcurrentUnbalancedLock: ConcurrentLock, UnbalancedLock {
 	func concurrentLock()

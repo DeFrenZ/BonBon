@@ -50,8 +50,7 @@ final class LockTests: AsynchronousTestCase {
 				}
 			}
 			guard group.wait(for: shortWaitLimit) == .success else {
-				XCTFail("Concurrent accesses should complete within the given time.")
-				return
+				return XCTFail("Concurrent accesses should complete within the given time.")
 			}
 		}
 	}

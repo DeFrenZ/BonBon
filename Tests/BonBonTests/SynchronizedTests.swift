@@ -4,12 +4,7 @@ import BonBon
 final class SynchronizedTests: AsynchronousTestCase {
 	// MARK: Setup
 
-	private var syncNumber: Synchronized<Int>!
-
-	override func setUp() {
-		super.setUp()
-		syncNumber = Synchronized(0)
-	}
+	private var syncNumber: Synchronized<Int> = .init(0)
 
 	// MARK: Unit tests
 
@@ -22,7 +17,7 @@ final class SynchronizedTests: AsynchronousTestCase {
 		}
 
 		sleep(for: shortWait)
-		XCTAssertEqual(syncNumber.value, 1)
+		XCTAssertEqual(syncNumber.value, 1, "The second access should wait for the atomic update to complete.")
 	}
 
 	// MARK: Linux support

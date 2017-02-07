@@ -11,7 +11,7 @@
 ///	- seealso: [Observer Pattern]
 ///		(https://en.wikipedia.org/wiki/Observer_pattern)
 public final class Observable<Observed> {
-	// MARK: - Private implementation
+	// MARK: Private implementation
 	
 	private var actionsPerObject: [ObjectIdentifier: UpdateAction] = [:]
 
@@ -31,7 +31,7 @@ public final class Observable<Observed> {
         actions.forEach { $0(oldValue, newValue) }
     }
 
-	// MARK: - Public interface
+	// MARK: Public interface
 
 	///	The type of the function that gets called back on updates.
 	///	- note: `from` and `to` are not necessarily different. Use
@@ -98,6 +98,8 @@ public final class Observable<Observed> {
 	}
 }
 
+// MARK: - Extensions
+
 extension Observable where Observed: Equatable {
 	/// Subscribe to changes on the wrapped value with the passed function, but
 	///	only when it gets set to a different value. That's the only difference
@@ -153,6 +155,8 @@ extension Observable {
 		return mappedObservable
 	}
 }
+
+// MARK: -
 
 /// An empty reference. It's only purpose is to be used to subscribe to an
 /// `Observable` when there's no more fitting object to use as the observer.

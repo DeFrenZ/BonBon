@@ -4,17 +4,9 @@ import BonBon
 final class ObservableTests: XCTestCase {
 	// MARK: Setup
 
-	private var observableNumber: Observable<Int>!
+	private var observableNumber: Observable<Int> = .init(0)
 	private var expectedUpdate: (Int, Int)?
 	private var expectedMappedUpdate: (String, String)?
-
-	override func setUp() {
-		super.setUp()
-
-		observableNumber = Observable(0)
-		expectedUpdate = nil
-		expectedMappedUpdate = nil
-	}
 
 	// MARK: Unit tests
 

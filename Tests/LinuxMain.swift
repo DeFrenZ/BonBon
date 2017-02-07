@@ -3,4 +3,6 @@ import XCTest
 
 XCTMain([
      testCase(ObservableTests.allTests),
+     testCase(SynchronizedTests.allTests),
+     testCase(LockTests.allTests),
 ])

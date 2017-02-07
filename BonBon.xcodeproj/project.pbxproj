@@ -12,12 +12,12 @@
 		038A3E7B1E48A50E00F29FBE /* LockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038A3E7A1E48A50E00F29FBE /* LockTests.swift */; };
 		038A3E801E49051500F29FBE /* AsynchronousTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038A3E7E1E49051500F29FBE /* AsynchronousTestCase.swift */; };
 		038A3E811E49051500F29FBE /* TestUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038A3E7F1E49051500F29FBE /* TestUtilities.swift */; };
-		038A3E851E4A73C500F29FBE /* MutexLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038A3E841E4A73C500F29FBE /* MutexLock.swift */; };
-		038A3E871E4A73EA00F29FBE /* ReadWriteLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038A3E861E4A73EA00F29FBE /* ReadWriteLock.swift */; };
-		038A3E891E4A744200F29FBE /* Lock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038A3E881E4A744200F29FBE /* Lock.swift */; };
-		038A3E8B1E4A74C800F29FBE /* SemaphoreLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038A3E8A1E4A74C800F29FBE /* SemaphoreLock.swift */; };
-		038A3E8D1E4A764800F29FBE /* QueueLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038A3E8C1E4A764800F29FBE /* QueueLock.swift */; };
-		038A3E8F1E4A7A4A00F29FBE /* UnfairLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038A3E8E1E4A7A4A00F29FBE /* UnfairLock.swift */; };
+		038A3EBE1E4A8D7800F29FBE /* Lock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038A3EB81E4A8D7800F29FBE /* Lock.swift */; };
+		038A3EBF1E4A8D7800F29FBE /* MutexLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038A3EB91E4A8D7800F29FBE /* MutexLock.swift */; };
+		038A3EC01E4A8D7800F29FBE /* QueueLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038A3EBA1E4A8D7800F29FBE /* QueueLock.swift */; };
+		038A3EC11E4A8D7800F29FBE /* ReadWriteLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038A3EBB1E4A8D7800F29FBE /* ReadWriteLock.swift */; };
+		038A3EC21E4A8D7800F29FBE /* SemaphoreLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038A3EBC1E4A8D7800F29FBE /* SemaphoreLock.swift */; };
+		038A3EC31E4A8D7800F29FBE /* UnfairLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038A3EBD1E4A8D7800F29FBE /* UnfairLock.swift */; };
 		OBJ_21 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* Observable.swift */; };
 		OBJ_28 /* ObservableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* ObservableTests.swift */; };
 		OBJ_30 /* BonBon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = OBJ_14 /* BonBon.framework */; };
@@ -39,12 +39,12 @@
 		038A3E7A1E48A50E00F29FBE /* LockTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LockTests.swift; sourceTree = "<group>"; };
 		038A3E7E1E49051500F29FBE /* AsynchronousTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsynchronousTestCase.swift; sourceTree = "<group>"; };
 		038A3E7F1E49051500F29FBE /* TestUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestUtilities.swift; sourceTree = "<group>"; };
-		038A3E841E4A73C500F29FBE /* MutexLock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MutexLock.swift; path = Lock/MutexLock.swift; sourceTree = "<group>"; };
-		038A3E861E4A73EA00F29FBE /* ReadWriteLock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReadWriteLock.swift; path = Lock/ReadWriteLock.swift; sourceTree = "<group>"; };
-		038A3E881E4A744200F29FBE /* Lock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Lock.swift; path = Lock/Lock.swift; sourceTree = "<group>"; };
-		038A3E8A1E4A74C800F29FBE /* SemaphoreLock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SemaphoreLock.swift; path = Lock/SemaphoreLock.swift; sourceTree = "<group>"; };
-		038A3E8C1E4A764800F29FBE /* QueueLock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = QueueLock.swift; path = Lock/QueueLock.swift; sourceTree = "<group>"; };
-		038A3E8E1E4A7A4A00F29FBE /* UnfairLock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UnfairLock.swift; path = Lock/UnfairLock.swift; sourceTree = "<group>"; };
+		038A3EB81E4A8D7800F29FBE /* Lock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lock.swift; sourceTree = "<group>"; };
+		038A3EB91E4A8D7800F29FBE /* MutexLock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MutexLock.swift; sourceTree = "<group>"; };
+		038A3EBA1E4A8D7800F29FBE /* QueueLock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueLock.swift; sourceTree = "<group>"; };
+		038A3EBB1E4A8D7800F29FBE /* ReadWriteLock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadWriteLock.swift; sourceTree = "<group>"; };
+		038A3EBC1E4A8D7800F29FBE /* SemaphoreLock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SemaphoreLock.swift; sourceTree = "<group>"; };
+		038A3EBD1E4A8D7800F29FBE /* UnfairLock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnfairLock.swift; sourceTree = "<group>"; };
 		OBJ_12 /* ObservableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableTests.swift; sourceTree = "<group>"; };
 		OBJ_14 /* BonBon.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BonBon.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_15 /* BonBonTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = BonBonTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -80,17 +80,26 @@
 			name = Utilities;
 			sourceTree = "<group>";
 		};
-		038A3E831E4A73AC00F29FBE /* Lock */ = {
+		038A3E831E4A73AC00F29FBE /* Locks */ = {
 			isa = PBXGroup;
 			children = (
-				038A3E881E4A744200F29FBE /* Lock.swift */,
-				038A3E841E4A73C500F29FBE /* MutexLock.swift */,
-				038A3E861E4A73EA00F29FBE /* ReadWriteLock.swift */,
-				038A3E8A1E4A74C800F29FBE /* SemaphoreLock.swift */,
-				038A3E8C1E4A764800F29FBE /* QueueLock.swift */,
-				038A3E8E1E4A7A4A00F29FBE /* UnfairLock.swift */,
+				038A3EB81E4A8D7800F29FBE /* Lock.swift */,
+				038A3EB91E4A8D7800F29FBE /* MutexLock.swift */,
+				038A3EBB1E4A8D7800F29FBE /* ReadWriteLock.swift */,
+				038A3EBC1E4A8D7800F29FBE /* SemaphoreLock.swift */,
+				038A3EBA1E4A8D7800F29FBE /* QueueLock.swift */,
+				038A3EBD1E4A8D7800F29FBE /* UnfairLock.swift */,
 			);
-			name = Lock;
+			name = Locks;
+			sourceTree = "<group>";
+		};
+		038A3EC41E4A8D8600F29FBE /* Wrappers */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_9 /* Observable.swift */,
+				038A3E6D1E4626DF00F29FBE /* Synchronized.swift */,
+			);
+			name = Wrappers;
 			sourceTree = "<group>";
 		};
 		OBJ_10 /* Tests */ = {
@@ -104,10 +113,10 @@
 		OBJ_11 /* BonBonTests */ = {
 			isa = PBXGroup;
 			children = (
+				038A3E821E49051900F29FBE /* Utilities */,
 				OBJ_12 /* ObservableTests.swift */,
 				038A3E711E46299800F29FBE /* SynchronizedTests.swift */,
 				038A3E7A1E48A50E00F29FBE /* LockTests.swift */,
-				038A3E821E49051900F29FBE /* Utilities */,
 			);
 			name = BonBonTests;
 			path = Tests/BonBonTests;
@@ -122,7 +131,7 @@
 			name = Products;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		OBJ_5 /*  */ = {
+		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
 				OBJ_6 /* Package.swift */,
@@ -130,7 +139,6 @@
 				OBJ_10 /* Tests */,
 				OBJ_13 /* Products */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_7 /* Sources */ = {
@@ -144,9 +152,8 @@
 		OBJ_8 /* BonBon */ = {
 			isa = PBXGroup;
 			children = (
-				OBJ_9 /* Observable.swift */,
-				038A3E6D1E4626DF00F29FBE /* Synchronized.swift */,
-				038A3E831E4A73AC00F29FBE /* Lock */,
+				038A3EC41E4A8D8600F29FBE /* Wrappers */,
+				038A3E831E4A73AC00F29FBE /* Locks */,
 			);
 			name = BonBon;
 			path = Sources;
@@ -203,7 +210,7 @@
 			knownRegions = (
 				en,
 			);
-			mainGroup = OBJ_5 /*  */;
+			mainGroup = OBJ_5;
 			productRefGroup = OBJ_13 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -219,14 +226,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
+				038A3EC11E4A8D7800F29FBE /* ReadWriteLock.swift in Sources */,
+				038A3EC31E4A8D7800F29FBE /* UnfairLock.swift in Sources */,
 				OBJ_21 /* Observable.swift in Sources */,
-				038A3E8F1E4A7A4A00F29FBE /* UnfairLock.swift in Sources */,
+				038A3EC01E4A8D7800F29FBE /* QueueLock.swift in Sources */,
+				038A3EBE1E4A8D7800F29FBE /* Lock.swift in Sources */,
+				038A3EC21E4A8D7800F29FBE /* SemaphoreLock.swift in Sources */,
+				038A3EBF1E4A8D7800F29FBE /* MutexLock.swift in Sources */,
 				038A3E6E1E4626DF00F29FBE /* Synchronized.swift in Sources */,
-				038A3E851E4A73C500F29FBE /* MutexLock.swift in Sources */,
-				038A3E8B1E4A74C800F29FBE /* SemaphoreLock.swift in Sources */,
-				038A3E891E4A744200F29FBE /* Lock.swift in Sources */,
-				038A3E871E4A73EA00F29FBE /* ReadWriteLock.swift in Sources */,
-				038A3E8D1E4A764800F29FBE /* QueueLock.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
