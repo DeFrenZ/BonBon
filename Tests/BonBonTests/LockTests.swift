@@ -7,18 +7,18 @@ final class LockTests: AsynchronousTestCase {
 	private static let numberOfConcurrentTasks = 1000
 	private static let numberOfRunsInPerformanceTest = 100_000
 
-	private var mutex: MutexLock!
-	private var readWrite: ReadWriteLock!
 	private var locks: [Lock]!
 	private var concurrentLocks: [ConcurrentLock]!
 
 	override func setUp() {
 		super.setUp()
 
-		mutex = MutexLock()
-		readWrite = ReadWriteLock()
-		locks = [mutex, readWrite]
-		concurrentLocks = [readWrite]
+		var nonConcurrentLocks: [Lock] = [MutexLock(), SemaphoreLock()]
+		if #available(OSX 10.12, *) {
+			nonConcurrentLocks.append(UnfairLock())
+		}
+		concurrentLocks = [ReadWriteLock(), QueueLock()]
+		locks = nonConcurrentLocks + (concurrentLocks as [Lock])
 	}
 
 	// MARK: Unit tests
@@ -65,21 +65,40 @@ final class LockTests: AsynchronousTestCase {
 	//		(https://www.cocoawithlove.com/blog/2016/06/02/threads-and-mutexes.html)
 
 	func test_whenUsingAMutexLock_thenPerformanceDoesntRegress() {
-		measure(times: LockTests.numberOfRunsInPerformanceTest) {
-			self.mutex.sync {}
-		}
+		measureLockPerformance(MutexLock())
 	}
 
 	func test_whenUsingAReadWriteLock_thenPerformanceDoesntRegress() {
-		measure(times: LockTests.numberOfRunsInPerformanceTest) {
-			self.readWrite.sync {}
-		}
+		measureLockPerformance(ReadWriteLock())
 	}
 
-	func test_whenUsingAConcurrentLock_andAccessingConcurrently_thenPerformanceDoesntRegress() {
-		measure(times: LockTests.numberOfRunsInPerformanceTest) {
-			self.readWrite.concurrentSync {}
-		}
+	func test_whenUsingASemaphoreLock_thenPerformanceDoesntRegress() {
+		measureLockPerformance(SemaphoreLock())
+	}
+
+	func test_whenUsingAQueueLock_thenPerformanceDoesntRegress() {
+		measureLockPerformance(QueueLock())
+	}
+
+	@available(OSX 10.12, *)
+	func test_whenUsingAnUnfairLock_thenPerformanceDoesntRegress() {
+		measureLockPerformance(UnfairLock())
+	}
+
+	func test_whenUsingAReadWriteLock_andAccessingConcurrently_thenPerformanceDoesntRegress() {
+		measureConcurrentLockPerformance(ReadWriteLock())
+	}
+
+	func test_whenUsingAQueueLock_andAccessingConcurrently_thenPerformanceDoesntRegress() {
+		measureConcurrentLockPerformance(QueueLock())
+	}
+
+	private func measureLockPerformance(_ lock: Lock) {
+		measure(times: LockTests.numberOfRunsInPerformanceTest) { lock.sync {} }
+	}
+
+	private func measureConcurrentLockPerformance(_ lock: ConcurrentLock) {
+		measure(times: LockTests.numberOfRunsInPerformanceTest) { lock.concurrentSync {} }
 	}
 
 	// MARK: Linux support
@@ -90,7 +109,10 @@ final class LockTests: AsynchronousTestCase {
 			("test_whenConcurrentAccessesAreRequestedAtTheSameTime_thenAllExecuteTogether", test_whenConcurrentAccessesAreRequestedAtTheSameTime_thenAllExecuteTogether),
 			("test_whenUsingAMutexLock_thenPerformanceDoesntRegress", test_whenUsingAMutexLock_thenPerformanceDoesntRegress),
 			("test_whenUsingAReadWriteLock_thenPerformanceDoesntRegress", test_whenUsingAReadWriteLock_thenPerformanceDoesntRegress),
-			("test_whenUsingAConcurrentLock_andAccessingConcurrently_thenPerformanceDoesntRegress", test_whenUsingAConcurrentLock_andAccessingConcurrently_thenPerformanceDoesntRegress),
+			("test_whenUsingASemaphoreLock_thenPerformanceDoesntRegress", test_whenUsingASemaphoreLock_thenPerformanceDoesntRegress),
+			("test_whenUsingAQueueLock_thenPerformanceDoesntRegress", test_whenUsingAQueueLock_thenPerformanceDoesntRegress),
+			("test_whenUsingAReadWriteLock_andAccessingConcurrently_thenPerformanceDoesntRegress", test_whenUsingAReadWriteLock_andAccessingConcurrently_thenPerformanceDoesntRegress),
+			("test_whenUsingAQueueLock_andAccessingConcurrently_thenPerformanceDoesntRegress", test_whenUsingAQueueLock_andAccessingConcurrently_thenPerformanceDoesntRegress),
 		]
 	}
 }
