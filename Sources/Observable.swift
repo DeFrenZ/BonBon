@@ -140,6 +140,7 @@ extension Observable {
 	/// resulting from applying the given `transform` on this one. The updates
 	///	are given referring to the transformed value, and changes are determined
 	///	in terms of the result of the transformation.
+	///	- seealso: `map`
 	///
 	/// - parameter transform: The transform between the value on this object
 	///		and a new `Observable`.
@@ -148,11 +149,7 @@ extension Observable {
 	///		`transform` on the current `value`, but which keeps track of future
 	///		changes of it.
 	public func flatMap <T> (_ transform: @escaping (_ value: Observed) -> Observable<T>) -> Observable<T> {
-		let mappedObservable = transform(value)
-		subscribe(mappedObservable, onUpdate: { [weak mappedObservable] oldValue, newValue in
-			mappedObservable?.value = transform(newValue).value
-		})
-		return mappedObservable
+		return map({ transform($0).value })
 	}
 }
 

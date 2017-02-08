@@ -38,6 +38,10 @@ public final class Synchronized<Wrapped> {
 		return try concurrentLock.concurrentSync(perform)
 	}
 
+	fileprivate var _allowConcurrentReads: Bool {
+		return _lock is ConcurrentLock
+	}
+
 	// MARK: Public interface
 
 	///	Create a new `Synchronized` wrapping the given `value`.
@@ -48,8 +52,8 @@ public final class Synchronized<Wrapped> {
 	///		to the wrapped value can happen concurrently or not. Defaults to
 	///		`true`.
 	public init(_ value: Wrapped, allowConcurrentReads: Bool = true) {
-		self._value = value
 		self._lock = allowConcurrentReads ? ReadWriteLock() : MutexLock()
+		self._value = value
 	}
 
 	/// The wrapped value. Access is thread-safe.
@@ -71,5 +75,41 @@ public final class Synchronized<Wrapped> {
 	/// - parameter value: The current wrapped value. Can be updated directly.
 	public func atomicallyUpdate(_ update: (_ value: inout Wrapped) throws -> Void) rethrows {
 		try _lock.sync({ try update(&_value) })
+	}
+}
+
+// MARK: - Extensions
+
+extension Synchronized {
+	/// Create a new `Synchronized` object that holds the result of a
+	/// `transform` on the current one. The new object will have the same
+	/// concurrency settings as the old one.
+	///	- note: The transformation is applied in a thread-safe manner, but the
+	///		synchronization of the new object is completely independent from the
+	///		one of this one.
+	///
+	///	- parameter transform: The transform applied on the current `value`
+	///		wrapped by this object.
+	///	- parameter value: The wrapped value on which the `transform` is applied
+	///		to.
+	///	- returns: Another `Synchronized`, wrapping the transformed value of
+	///		this one.
+	public func map <T> (_ transform: @escaping (_ value: Wrapped) -> T) -> Synchronized<T> {
+		return .init(transform(value), allowConcurrentReads: _allowConcurrentReads)
+	}
+
+	/// Create a new `Synchronized` object that holds the same value of the
+	///	result of a `transform` on the current one. The new object will have the
+	///	same concurrency settings as the old one.
+	///	- seealso: `map`
+	///
+	///	- parameter transform: The transform applied on the current `value`
+	///		wrapped by this object.
+	///	- parameter value: The wrapped value on which the `transform` is applied
+	///		to.
+	///	- returns: Another `Synchronized`, wrapping the same value of the
+	///		transform on this one's.
+	public func flatMap <T> (_ transform: @escaping (_ value: Wrapped) -> Synchronized<T>) -> Synchronized<T> {
+		return map({ transform($0).value })
 	}
 }

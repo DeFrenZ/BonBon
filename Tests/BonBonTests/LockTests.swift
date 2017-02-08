@@ -92,6 +92,8 @@ final class LockTests: AsynchronousTestCase {
 		measureConcurrentLockPerformance(QueueLock())
 	}
 
+	// MARK: Private utilities
+
 	private func measureLockPerformance(_ lock: Lock) {
 		measure(times: LockTests.numberOfRunsInPerformanceTest) { lock.sync {} }
 	}
