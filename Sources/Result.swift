@@ -1,7 +1,11 @@
 /// A wrapper around the result of an operation. It either holds a successful
 /// result of the declared type, or an error that occurred in executing it.
-/// This implementation opted for non-strongly typed errors as it works better
-/// together with the existing Swift error handling.
+///	- remark: Particularly indicated for asynchronous tasks, as in that case
+/// specifying that something can `throw` is not as convenient, while in the
+/// synchronous case returning a `Result` is not much different from just
+/// specifying a function as throwing.
+///	- note: This implementation opted for non-strongly typed
+/// errors as it works better together with the existing Swift error handling.
 ///	- seealso: [Result Type](https://en.wikipedia.org/wiki/Result_type)
 public enum Result<Value> {
 	/// The value returned from a successful execution.
@@ -11,10 +15,6 @@ public enum Result<Value> {
 }
 
 // MARK: - Interoperation with `Optional`s
-
-/// A convenience error to use when something went wrong, but no information
-/// about the failure is available.
-public struct UnknownError: Error {}
 
 extension Result {
 	/// A conveniece initializer for converting a couple of `Optional`s to a
@@ -80,3 +80,41 @@ extension Result {
 		}
 	}
 }
+
+// MARK: - Functional extensions
+
+extension Result {
+	/// Create a new `Result` from transforming the previous value if it was
+	/// successful, otherwise keep the same error.
+	///
+	///	- parameter transform: The transformation applied on the previous value
+	///		if `.success`.
+	///	- returns: `.success` with the result of the transformation if it was
+	///		`.success` before, otherwise a `.failure` with the same error.
+	public func map <T> (_ transform: (Value) -> T) -> Result<T> {
+		switch self {
+		case .success(let value): return .success(transform(value))
+		case .failure(let error): return .failure(error)
+		}
+	}
+
+	/// Return the result of transforming the previous value if it was
+	/// successful, otherwise keep the same error.
+	///
+	///	- parameter transform: The transformation applied on the previous value
+	///		if `.success`.
+	///	- returns: The result of the transformation if it was `.success` before,
+	///		otherwise a `.failure` with the same error.
+	public func flatMap <T> (_ transform: (Value) -> Result<T>) -> Result<T> {
+		switch self {
+		case .success(let value): return transform(value)
+		case .failure(let error): return .failure(error)
+		}
+	}
+}
+
+// MARK: -
+
+/// A convenience error to use when something went wrong, but no information
+/// about the failure is available.
+public struct UnknownError: Error {}

@@ -78,7 +78,7 @@ public final class Synchronized<Wrapped> {
 	}
 }
 
-// MARK: - Extensions
+// MARK: - Functional extensions
 
 extension Synchronized {
 	/// Create a new `Synchronized` object that holds the result of a

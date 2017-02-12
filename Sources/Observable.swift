@@ -98,7 +98,7 @@ public final class Observable<Observed> {
 	}
 }
 
-// MARK: - Extensions
+// MARK: - Type-constrained extensions
 
 extension Observable where Observed: Equatable {
 	/// Subscribe to changes on the wrapped value with the passed function, but
@@ -116,6 +116,8 @@ extension Observable where Observed: Equatable {
 		})
 	}
 }
+
+// MARK: - Functional extensions
 
 extension Observable {
 	///	Create a new `Observable` object that always keeps the same value as
