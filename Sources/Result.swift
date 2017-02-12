@@ -53,3 +53,30 @@ extension Result {
 		}
 	}
 }
+
+// MARK: - Interoperation with Swift error handling
+
+extension Result {
+	/// A convenience initializer for converting a throwing function to a
+	/// `Result`. The given function is evaluated eagerly.
+	///
+	///	- parameter operation: The given function that will either return a
+	///		value or throw an error.
+	///	- returns: A `Result` respecting the outcome of executing `operation`.
+	public init(_ operation: () throws -> Value) {
+		do {
+			self = .success(try operation())
+		} catch {
+			self = .failure(error)
+		}
+	}
+
+	/// A conveniece property for converting this `Result` to the standard Swift
+	/// error handling.
+	public func unwrap() throws -> Value {
+		switch self {
+		case .success(let value): return value
+		case .failure(let error): throw error
+		}
+	}
+}
