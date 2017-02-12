@@ -118,3 +118,4 @@ extension Result {
 /// A convenience error to use when something went wrong, but no information
 /// about the failure is available.
 public struct UnknownError: Error {}
+public let unknownError: UnknownError = .init()
