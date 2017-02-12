@@ -40,6 +40,23 @@ final class LockTests: AsynchronousTestCase {
 		}
 	}
 
+	func test_whenManyNonConcurrentAccessesAreRequestedAtTheSameTime_thenAllExecuteSequentially() {
+		for lock in locks {
+			var number = 0
+			for _ in 0 ..< LockTests.numberOfConcurrentTasks {
+				queue.async(group: group) {
+					lock.sync {
+						number += 1
+					}
+				}
+			}
+			group.wait()
+			lock.sync {
+				XCTAssertEqual(number, LockTests.numberOfConcurrentTasks, "All accesses should have completed sequentially.")
+			}
+		}
+	}
+
 	func test_whenConcurrentAccessesAreRequestedAtTheSameTime_thenAllExecuteTogether() {
 		for lock in concurrentLocks {
 			for _ in 0 ..< LockTests.numberOfConcurrentTasks {
