@@ -52,7 +52,7 @@ public final class Synchronized<Wrapped> {
 	///		to the wrapped value can happen concurrently or not. Defaults to
 	///		`true`.
 	public init(_ value: Wrapped, allowConcurrentReads: Bool = true) {
-		self._lock = allowConcurrentReads ? .concurrent(ReadWriteLock()) : .synchronous(MutexLock())
+		self._lock = _Lock(isConcurrent: allowConcurrentReads)
 		self._value = value
 	}
 
@@ -117,8 +117,15 @@ extension Synchronized {
 // MARK: -
 
 private enum _Lock {
+	static let defaultSynchronous: _Lock = .synchronous(MutexLock())
+	static let defaultConcurrent: _Lock = .concurrent(ReadWriteLock())
+	init(isConcurrent: Bool) {
+		self = isConcurrent ? .defaultConcurrent : .defaultSynchronous
+	}
+
 	case synchronous(Lock)
 	case concurrent(ConcurrentLock)
+
 	var lock: Lock {
 		switch self {
 		case .synchronous(let lock): return lock
