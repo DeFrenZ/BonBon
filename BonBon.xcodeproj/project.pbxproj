@@ -18,6 +18,7 @@
 		038A3EC11E4A8D7800F29FBE /* ReadWriteLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038A3EBB1E4A8D7800F29FBE /* ReadWriteLock.swift */; };
 		038A3EC21E4A8D7800F29FBE /* SemaphoreLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038A3EBC1E4A8D7800F29FBE /* SemaphoreLock.swift */; };
 		038A3EC31E4A8D7800F29FBE /* UnfairLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038A3EBD1E4A8D7800F29FBE /* UnfairLock.swift */; };
+		038A3EC61E511A9500F29FBE /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038A3EC51E511A9500F29FBE /* Result.swift */; };
 		OBJ_21 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* Observable.swift */; };
 		OBJ_28 /* ObservableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* ObservableTests.swift */; };
 		OBJ_30 /* BonBon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = OBJ_14 /* BonBon.framework */; };
@@ -45,6 +46,7 @@
 		038A3EBB1E4A8D7800F29FBE /* ReadWriteLock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadWriteLock.swift; sourceTree = "<group>"; };
 		038A3EBC1E4A8D7800F29FBE /* SemaphoreLock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SemaphoreLock.swift; sourceTree = "<group>"; };
 		038A3EBD1E4A8D7800F29FBE /* UnfairLock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnfairLock.swift; sourceTree = "<group>"; };
+		038A3EC51E511A9500F29FBE /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		OBJ_12 /* ObservableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableTests.swift; sourceTree = "<group>"; };
 		OBJ_14 /* BonBon.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BonBon.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_15 /* BonBonTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = BonBonTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -98,6 +100,7 @@
 			children = (
 				OBJ_9 /* Observable.swift */,
 				038A3E6D1E4626DF00F29FBE /* Synchronized.swift */,
+				038A3EC51E511A9500F29FBE /* Result.swift */,
 			);
 			name = Wrappers;
 			sourceTree = "<group>";
@@ -226,6 +229,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
+				038A3EC61E511A9500F29FBE /* Result.swift in Sources */,
 				038A3EC11E4A8D7800F29FBE /* ReadWriteLock.swift in Sources */,
 				038A3EC31E4A8D7800F29FBE /* UnfairLock.swift in Sources */,
 				OBJ_21 /* Observable.swift in Sources */,
