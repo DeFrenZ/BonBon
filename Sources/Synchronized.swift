@@ -28,14 +28,14 @@
 public final class Synchronized<Wrapped> {
 	// MARK: Private implementation
 	
-	private var _lock: Lock
+	private var _lock: _Lock
 	private var _value: Wrapped
 
 	private func readSync <T> (_ perform: () throws -> T) rethrows -> T {
-		guard let concurrentLock = _lock as? ConcurrentLock else {
-			return try _lock.sync(perform)
+		switch _lock {
+		case .synchronous(let lock): return try lock.sync(perform)
+		case .concurrent(let lock): return try lock.concurrentSync(perform)
 		}
-		return try concurrentLock.concurrentSync(perform)
 	}
 
 	fileprivate var _allowConcurrentReads: Bool {
@@ -52,7 +52,7 @@ public final class Synchronized<Wrapped> {
 	///		to the wrapped value can happen concurrently or not. Defaults to
 	///		`true`.
 	public init(_ value: Wrapped, allowConcurrentReads: Bool = true) {
-		self._lock = allowConcurrentReads ? ReadWriteLock() : MutexLock()
+		self._lock = allowConcurrentReads ? .concurrent(ReadWriteLock()) : .synchronous(MutexLock())
 		self._value = value
 	}
 
@@ -62,7 +62,7 @@ public final class Synchronized<Wrapped> {
 	///		might not be. Check the documentation of the type for examples.
 	public var value: Wrapped {
 		get { return readSync { _value } }
-		set { _lock.sync { _value = newValue } }
+		set { _lock.lock.sync { _value = newValue } }
 	}
 
 	/// Execute the given function within a thread-safe context that has
@@ -74,7 +74,7 @@ public final class Synchronized<Wrapped> {
 	///		to the wrapped value.
 	/// - parameter value: The current wrapped value. Can be updated directly.
 	public func atomicallyUpdate(_ update: (_ value: inout Wrapped) throws -> Void) rethrows {
-		try _lock.sync({ try update(&_value) })
+		try _lock.lock.sync({ try update(&_value) })
 	}
 }
 
@@ -111,5 +111,18 @@ extension Synchronized {
 	///		transform on this one's.
 	public func flatMap <T> (_ transform: @escaping (_ value: Wrapped) -> Synchronized<T>) -> Synchronized<T> {
 		return map({ transform($0).value })
+	}
+}
+
+// MARK: -
+
+private enum _Lock {
+	case synchronous(Lock)
+	case concurrent(ConcurrentLock)
+	var lock: Lock {
+		switch self {
+		case .synchronous(let lock): return lock
+		case .concurrent(let lock): return lock
+		}
 	}
 }
