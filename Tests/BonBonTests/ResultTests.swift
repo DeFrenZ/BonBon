@@ -11,31 +11,17 @@ final class ResultTests: XCTestCase {
 
 	func test_whenInitializingWithSomeValueAndNilError_thenItsASuccessWrappingTheValue() {
 		let result = Result(value: value, error: nil)
-		if case .success(let value) = result {
-			XCTAssertEqual(value, self.value, "The wrapped value should be the given one.")
-		} else {
-			XCTFail("It should be a `success`.")
-		}
+		assertIsSuccessWithSetupValue(result)
 	}
 
 	func test_whenInitializingWithNilValueAndSomeError_thenItsAFailureWrappingTheError() {
 		let result = Result<Int>(value: nil, error: error)
-		if case .failure(let error) = result {
-			if let error = error as? TestError, error == self.error {} else {
-				XCTFail("The wrapped error should be the given one.")
-			}
-		} else {
-			XCTFail("It should be a `failure`.")
-		}
+		assertIsFailureWithSetupError(result)
 	}
 
 	func test_whenInitializingWithSomeValueAndSomeError_thenItsASuccessWrappingTheValue() {
 		let result = Result(value: value, error: error, allowInconsistentArguments: true)
-		if case .success(let value) = result {
-			XCTAssertEqual(value, self.value, "The wrapped value should be the given one.")
-		} else {
-			XCTFail("It should be a `success`.")
-		}
+		assertIsSuccessWithSetupValue(result)
 	}
 
 	func test_whenInitializingWithNilValueAndNilError_thenItsAFailure() {
@@ -51,6 +37,32 @@ final class ResultTests: XCTestCase {
 		var code: Int = 0
 		static func == (lhs: TestError, rhs: TestError) -> Bool {
 			return lhs.code == rhs.code
+		}
+	}
+
+	func assertIsSetupValue(_ value: Int?, file: StaticString = #file, line: UInt = #line) {
+		XCTAssertEqual(value, self.value, "The value should be the setup value.", file: file, line: line)
+	}
+
+	func assertIsSetupError(_ error: Error?, file: StaticString = #file, line: UInt = #line) {
+		if let error = error as? TestError, error == self.error {} else {
+			XCTFail("The error should be the setup error.", file: file, line: line)
+		}
+	}
+
+	func assertIsSuccessWithSetupValue(_ result: Result<Int>, file: StaticString = #file, line: UInt = #line) {
+		if case .success(let value) = result {
+			assertIsSetupValue(value, file: file, line: line)
+		} else {
+			XCTFail("The result should be a `success`.", file: file, line: line)
+		}
+	}
+
+	func assertIsFailureWithSetupError <T> (_ result: Result<T>, file: StaticString = #file, line: UInt = #line) {
+		if case .failure(let error) = result {
+			assertIsSetupError(error, file: file, line: line)
+		} else {
+			XCTFail("The result should be a `failure`.", file: file, line: line)
 		}
 	}
 }
