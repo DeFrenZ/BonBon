@@ -28,7 +28,7 @@ final class ResultTests: XCTestCase {
 	}
 
 	func test_whenInitializingWithSomeValueAndSomeError_thenItsASuccessWrappingTheValue() {
-		let result = Result(value: value, error: error)
+		let result = Result(value: value, error: error, allowInconsistentArguments: true)
 		if case .success(let value) = result {
 			XCTAssertEqual(value, self.value, "The wrapped value should be the given one.")
 		} else {
@@ -37,7 +37,7 @@ final class ResultTests: XCTestCase {
 	}
 
 	func test_whenInitializingWithNilValueAndNilError_thenItsAFailure() {
-		let result = Result<Void>(value: nil, error: nil)
+		let result = Result<Void>(value: nil, error: nil, allowInconsistentArguments: true)
 		if case .success = result {
 			XCTFail("It should be a `failure`.")
 		}

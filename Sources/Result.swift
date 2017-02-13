@@ -19,19 +19,34 @@ public enum Result<Value> {
 extension Result {
 	/// A conveniece initializer for converting a couple of `Optional`s to a
 	/// `Result`. Only one of the two given `Optional`s should be `.some`, but
-	/// the other cases are handled sensibly as well.
+	/// in the other cases it either `assert`s or give sensible results,
+	///	depending on `allowInconsistentArguments`' value.
 	///
 	///	- parameter value: The optional value.
 	///	- parameter error: The optional error.
+	///	- parameter allowInconsistentArguments: Specifies if passing inconsitent
+	///		arguments should be allowed or not. If not, this will `assert` in
+	///		the inconsistent cases. Defaults to `false`.
 	///	- returns: `.success` or `.failure` as expected in the cases where
 	///		exactly one of the two `Optional`s is `.some`, a `.success` when
 	///		both are `.some` and a `.failure` with an `UnknownError` when both
 	///		are `.none`.
-	public init(value: Value?, error: Error?) {
+	public init(value: Value?, error: Error?, allowInconsistentArguments: Bool = false) {
 		switch (value, error) {
-		case (let value?, _): self = .success(value)
-		case (nil, let error?): self = .failure(error)
-		case (nil, nil): self = .failure(UnknownError())
+		case let (value?, error):
+			assert(
+				error == nil || allowInconsistentArguments,
+				"Creating a `Result` with both a value and an error with assertions enabled."
+			)
+			self = .success(value)
+		case let (nil, error?):
+			self = .failure(error)
+		case (nil, nil):
+			assert(
+				allowInconsistentArguments,
+				"Creating a `Result` with neither a value nor an error with assertions enabled."
+			)
+			self = .failure(UnknownError())
 		}
 	}
 
