@@ -8,6 +8,8 @@ final class ResultTests: XCTestCase {
 	private var error: TestError = .init(code: 42)
 	private lazy var successResult: Result<Int> = .success(self.value)
 	private lazy var failureResult: Result<Int> = .failure(self.error)
+	private var mapValue: String = "1"
+	private var mapError: TestError = .init(code: 88)
 	
 	// MARK: Unit tests
 
@@ -78,6 +80,36 @@ final class ResultTests: XCTestCase {
 		}
 	}
 
+	func test_whenMappingASuccess_thenItReturnsTheValueTransformed() {
+		let result = successResult.map({ _ in self.mapValue })
+		assertIsSuccessWithMapValue(result)
+	}
+
+	func test_whenMappingAFailure_thenItReturnsTheSameErrorAsBefore() {
+		let result = failureResult.map({ _ in self.mapValue })
+		assertIsFailureWithSetupError(result)
+	}
+
+	func test_whenFlatMappingASuccess_andTheTransformSucceeds_thenItReturnsTheValueTransformed() {
+		let result = successResult.flatMap({ _ in .success(self.mapValue) })
+		assertIsSuccessWithMapValue(result)
+	}
+
+	func test_whenFlatMappingASuccess_andTheTransformFails_thenItReturnsTheTransformError() {
+		let result = successResult.flatMap({ _ -> Result<String> in .failure(self.mapError) })
+		assertIsFailureWithMapError(result)
+	}
+
+	func test_whenFlatMappingAFailure_andTheTransformSucceeds_thenItReturnsTheSameErrorAsBefore() {
+		let result = failureResult.flatMap({ _ in .success(self.mapValue) })
+		assertIsFailureWithSetupError(result)
+	}
+
+	func test_whenFlatMappingAFailure_andTheTransformFails_thenItReturnsTheSameErrorAsBefore() {
+		let result = failureResult.flatMap({ _ -> Result<String> in .failure(self.mapError) })
+		assertIsFailureWithSetupError(result)
+	}
+
 	// MARK: - Private utilities
 
 	private struct TestError: Error, Equatable {
@@ -97,6 +129,16 @@ final class ResultTests: XCTestCase {
 		}
 	}
 
+	func assertIsMapValue(_ value: String?, file: StaticString = #file, line: UInt = #line) {
+		XCTAssertEqual(value, self.mapValue, "The value should be the map value.", file: file, line: line)
+	}
+
+	func assertIsMapError(_ error: Error?, file: StaticString = #file, line: UInt = #line) {
+		if let error = error as? TestError, error == self.mapError {} else {
+			XCTFail("The error should be the map error.", file: file, line: line)
+		}
+	}
+
 	func assertIsSuccessWithSetupValue(_ result: Result<Int>, file: StaticString = #file, line: UInt = #line) {
 		if case .success(let value) = result {
 			assertIsSetupValue(value, file: file, line: line)
@@ -108,6 +150,22 @@ final class ResultTests: XCTestCase {
 	func assertIsFailureWithSetupError <T> (_ result: Result<T>, file: StaticString = #file, line: UInt = #line) {
 		if case .failure(let error) = result {
 			assertIsSetupError(error, file: file, line: line)
+		} else {
+			XCTFail("The result should be a `failure`.", file: file, line: line)
+		}
+	}
+
+	func assertIsSuccessWithMapValue(_ result: Result<String>, file: StaticString = #file, line: UInt = #line) {
+		if case .success(let value) = result {
+			assertIsMapValue(value, file: file, line: line)
+		} else {
+			XCTFail("The result should be a `success`.", file: file, line: line)
+		}
+	}
+
+	func assertIsFailureWithMapError <T> (_ result: Result<T>, file: StaticString = #file, line: UInt = #line) {
+		if case .failure(let error) = result {
+			assertIsMapError(error, file: file, line: line)
 		} else {
 			XCTFail("The result should be a `failure`.", file: file, line: line)
 		}
