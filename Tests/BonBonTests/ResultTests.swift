@@ -5,7 +5,7 @@ final class ResultTests: XCTestCase {
 	// MARK: Setup
 
 	private var value: Int = 1
-	private var error: Error = unknownError
+	private var error: TestError = .init(code: 42)
 	
 	// MARK: Unit tests
 
@@ -19,9 +19,11 @@ final class ResultTests: XCTestCase {
 	}
 
 	func test_whenInitializingWithNilValueAndSomeError_thenItsAFailureWrappingTheError() {
-		let result = Result<Void>(value: nil, error: error)
+		let result = Result<Int>(value: nil, error: error)
 		if case .failure(let error) = result {
-			XCTAssert(error is UnknownError, "The wrapped error should be the given one.")
+			if let error = error as? TestError, error == self.error {} else {
+				XCTFail("The wrapped error should be the given one.")
+			}
 		} else {
 			XCTFail("It should be a `failure`.")
 		}
@@ -37,9 +39,18 @@ final class ResultTests: XCTestCase {
 	}
 
 	func test_whenInitializingWithNilValueAndNilError_thenItsAFailure() {
-		let result = Result<Void>(value: nil, error: nil, allowInconsistentArguments: true)
+		let result = Result<Int>(value: nil, error: nil, allowInconsistentArguments: true)
 		if case .success = result {
 			XCTFail("It should be a `failure`.")
+		}
+	}
+
+	// MARK: - Private utilities
+
+	private struct TestError: Error, Equatable {
+		var code: Int = 0
+		static func == (lhs: TestError, rhs: TestError) -> Bool {
+			return lhs.code == rhs.code
 		}
 	}
 }
