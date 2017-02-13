@@ -46,7 +46,7 @@ extension Result {
 				allowInconsistentArguments,
 				"Creating a `Result` with neither a value nor an error with assertions enabled."
 			)
-			self = .failure(UnknownError())
+			self = .failure(unknownError)
 		}
 	}
 
