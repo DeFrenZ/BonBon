@@ -6,6 +6,8 @@ final class ResultTests: XCTestCase {
 
 	private var value: Int = 1
 	private var error: TestError = .init(code: 42)
+	private lazy var successResult: Result<Int> = .success(self.value)
+	private lazy var failureResult: Result<Int> = .failure(self.error)
 	
 	// MARK: Unit tests
 
@@ -29,6 +31,22 @@ final class ResultTests: XCTestCase {
 		if case .success = result {
 			XCTFail("It should be a `failure`.")
 		}
+	}
+
+	func test_whenHavingASuccess_thenValueIsTheWrappedOne() {
+		assertIsSetupValue(successResult.value)
+	}
+
+	func test_whenHavingAFailure_thenValueIsNil() {
+		XCTAssertEqual(failureResult.value, nil, "The wrapped value should be nil.")
+	}
+
+	func test_whenHavingASuccess_thenErrorIsNil() {
+		XCTAssert(successResult.error == nil, "The wrapped error should be nil.")
+	}
+
+	func test_whenHavingAFailure_thenErrorIsTheWrappedOne() {
+		assertIsSetupError(failureResult.error)
 	}
 
 	// MARK: - Private utilities
