@@ -49,6 +49,35 @@ final class ResultTests: XCTestCase {
 		assertIsSetupError(failureResult.error)
 	}
 
+	func test_whenInitializingWithSuccessfulOperation_thenItsASuccess() {
+		let operation = { self.value }
+		let result = Result(operation)
+		assertIsSuccessWithSetupValue(result)
+	}
+
+	func test_whenInitializingWithFailingOperation_thenItsAFailure() {
+		let operation = { () -> Int in throw self.error }
+		let result = Result(operation)
+		assertIsFailureWithSetupError(result)
+	}
+
+	func test_whenUnwrappingASuccess_thenItReturnsTheWrappedValue() {
+		do {
+			assertIsSetupValue(try successResult.unwrap())
+		} catch {
+			XCTFail("The unwrap shouldn't throw.")
+		}
+	}
+
+	func test_whenUnwrappingAFailure_thenItThrowsTheWrappedError() {
+		do {
+			_ = try failureResult.unwrap()
+			XCTFail("The unwrap should throw.")
+		} catch let error {
+			assertIsSetupError(error)
+		}
+	}
+
 	// MARK: - Private utilities
 
 	private struct TestError: Error, Equatable {
