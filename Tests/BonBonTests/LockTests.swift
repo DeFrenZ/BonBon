@@ -8,17 +8,26 @@ final class LockTests: AsynchronousTestCase {
 	private static let numberOfRunsInPerformanceTest = 100_000
 
 	private var locks: [Lock]!
+	private var unbalancedLocks: [UnbalancedLock]!
 	private var concurrentLocks: [ConcurrentLock]!
+	private var concurrentUnbalancedLocks: [ConcurrentUnbalancedLock]!
 
 	override func setUp() {
 		super.setUp()
 
-		var nonConcurrentLocks: [Lock] = [MutexLock(), SemaphoreLock()]
+		locks = [
+			MutexLock(),
+			ReadWriteLock(),
+			SemaphoreLock(),
+			QueueLock(),
+		]
 		if #available(OSX 10.12, *) {
-			nonConcurrentLocks.append(UnfairLock())
+			locks.append(UnfairLock())
 		}
-		concurrentLocks = [ReadWriteLock(), QueueLock()]
-		locks = nonConcurrentLocks + (concurrentLocks as [Lock])
+
+		unbalancedLocks = locks.flatMap({ $0 as? UnbalancedLock })
+		concurrentLocks = locks.flatMap({ $0 as? ConcurrentLock })
+		concurrentUnbalancedLocks = locks.flatMap({ $0 as? ConcurrentUnbalancedLock })
 	}
 
 	// MARK: Unit tests
