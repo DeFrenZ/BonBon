@@ -16,7 +16,7 @@ public final class Observable<Observed> {
 	private var actionsPerObject: [ObjectIdentifier: UpdateAction] = [:]
 
 	private var actions: AnySequence<UpdateAction> {
-		return AnySequence(actionsPerObject.values)
+		return .init(actionsPerObject.values)
 	}
 
 	private func addObserver(with identifier: ObjectIdentifier, onUpdate: @escaping UpdateAction) {
@@ -131,7 +131,7 @@ extension Observable {
 	///	- returns: Another `Observable`, which notifies its subscribers of
 	///		updates on its transformed value.
 	public func map <T> (_ transform: @escaping (_ value: Observed) -> T) -> Observable<T> {
-		let mappedObservable = Observable<T>(transform(value))
+		let mappedObservable: Observable<T> = .init(transform(value))
 		subscribe(mappedObservable, onUpdate: { [weak mappedObservable] oldValue, newValue in
 			mappedObservable?.value = transform(newValue)
 		})

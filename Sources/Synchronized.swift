@@ -52,7 +52,7 @@ public final class Synchronized<Wrapped> {
 	///		to the wrapped value can happen concurrently or not. Defaults to
 	///		`true`.
 	public init(_ value: Wrapped, allowConcurrentReads: Bool = true) {
-		self._lock = _Lock(isConcurrent: allowConcurrentReads)
+		self._lock = .init(isConcurrent: allowConcurrentReads)
 		self._value = value
 	}
 
