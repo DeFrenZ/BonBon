@@ -13,6 +13,15 @@ extension Box {
 	}
 }
 
+extension Box {
+	public func map <T> (_ transform: (Wrapped) throws -> T) rethrows -> ImmutableBox<T> {
+		return try .init(wrapping: transform(value))
+	}
+	public func flatMap <NewBox: Box> (_ transform: (Wrapped) throws -> NewBox) rethrows -> ImmutableBox<NewBox.Wrapped> {
+		return try map({ try transform($0).value })
+	}
+}
+
 public final class ImmutableBox<Wrapped>: Box {
 	public let value: Wrapped
 	public init(wrapping value: Wrapped) {
