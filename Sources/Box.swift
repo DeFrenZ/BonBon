@@ -63,7 +63,17 @@ extension Box {
 
 // MARK: - ==
 
-public func == <LeftBox: Box, RightBox: Box> (lhs: LeftBox, rhs: RightBox) -> Bool where LeftBox.Wrapped: Equatable, LeftBox.Wrapped == RightBox.Wrapped {
+/// Returns a `Bool` value indicating whether two `Box`es objects wrap the same
+/// value.
+///	- note: This check doesn't consider the type of the objects. If you want to
+///		check whether two variables refer to the same object, use `===` instead.
+///
+///	- parameter lhs: The object on the left hand side of the operator.
+///	- parameter rhs: The object on the right hand side of the operator.
+///	- returns: `true` if the two objects wrap the same value, `false` otherwise.
+public func == <LeftBox: Box, RightBox: Box> (_ lhs: LeftBox, _ rhs: RightBox) -> Bool
+	where LeftBox.Wrapped: Equatable, LeftBox.Wrapped == RightBox.Wrapped
+{
 	return lhs.value == rhs.value
 }
 

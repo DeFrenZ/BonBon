@@ -158,7 +158,17 @@ extension Observable {
 // MARK: - ==
 
 extension Observable where Observed: Equatable {
-	public static func == (lhs: Observable, rhs: Observable) -> Bool {
+	/// Returns a `Bool` value indicating whether two `Observable` objects wrap
+	/// the same value.
+	///	- note: This check doesn't consider who is observing the objects. If you
+	///		want to check whether two variables refer to the same object, use
+	///		`===` instead.
+	///
+	///	- parameter lhs: The object on the left hand side of the operator.
+	///	- parameter rhs: The object on the right hand side of the operator.
+	///	- returns: `true` if the two objects wrap the same value, `false`
+	///		otherwise.
+	public static func == (_ lhs: Observable, _ rhs: Observable) -> Bool {
 		return lhs.value == rhs.value
 	}
 }
