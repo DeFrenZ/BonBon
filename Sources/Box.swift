@@ -77,6 +77,19 @@ public func == <LeftBox: Box, RightBox: Box> (_ lhs: LeftBox, _ rhs: RightBox) -
 	return lhs.value == rhs.value
 }
 
+/// Returns a `Bool` value indicating whether two `Box`es objects don't wrap the
+/// same value.
+///	- seealso: `==` with the same argument list.
+///
+///	- parameter lhs: The object on the left hand side of the operator.
+///	- parameter rhs: The object on the right hand side of the operator.
+///	- returns: `false` if the two objects wrap the same value, `true` otherwise.
+public func != <LeftBox: Box, RightBox: Box> (_ lhs: LeftBox, _ rhs: RightBox) -> Bool
+	where LeftBox.Wrapped: Equatable, LeftBox.Wrapped == RightBox.Wrapped
+{
+	return !(lhs == rhs)
+}
+
 // MARK: -
 
 /// A `Box` that doesn't change the value it wraps after instantiation.

@@ -128,7 +128,7 @@ extension Synchronized where Wrapped: Equatable {
 	///	- parameter rhs: The object on the right hand side of the operator.
 	///	- returns: `true` if the two objects wrap the same value, `false`
 	///		otherwise.
-	public static func == (lhs: Synchronized, rhs: Synchronized) -> Bool {
+	public static func == (_ lhs: Synchronized, _ rhs: Synchronized) -> Bool {
 		guard lhs !== rhs else { return true }
 		var valuesAreEqual: Bool!
 		lhs.atomicallyUpdate { lhs in
@@ -141,6 +141,19 @@ extension Synchronized where Wrapped: Equatable {
 			"This line shouldn't be reached before setting this variable."
 		)
 		return valuesAreEqual ?? false
+	}
+
+	/// Returns a `Bool` value indicating whether two `Synchronized` objects
+	/// don't wrap the same value. The check is thread-safe, but doesn't
+	/// necessarily use the locks.
+	///	- seealso: `Synchronized.==`
+	///
+	///	- parameter lhs: The object on the left hand side of the operator.
+	///	- parameter rhs: The object on the right hand side of the operator.
+	///	- returns: `false` if the two objects wrap the same value, `true`
+	///		otherwise.
+	public static func != (_ lhs: Synchronized, _ rhs: Synchronized) -> Bool {
+		return !(lhs == rhs)
 	}
 }
 
