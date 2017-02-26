@@ -1,7 +1,7 @@
 /// A protocol representing the common interface of reference wrappers around
 /// values. This protocol is only used to share implementation between the
 /// available box types.
-protocol Box: class {
+public protocol Box: class {
 	/// The type of the wrapped value.
 	///	- warning: Using a reference type defeats the purpose of this wrapper.
 	associatedtype Wrapped
@@ -15,6 +15,8 @@ protocol Box: class {
 	/// Retrieve the wrapped value by "unboxing" it.
 	var value: Wrapped { get }
 }
+
+// MARK: - Copy extensions
 
 extension Box {
 	/// Create a new box wrapping the same value. Suggested when handling a
@@ -33,6 +35,8 @@ extension Box {
 		return .init(wrapping: value)
 	}
 }
+
+// MARK: - Functional extensions
 
 extension Box {
 	/// Create a new box wrapping the value resulting from applying the given
@@ -57,6 +61,8 @@ extension Box {
 	}
 }
 
+// MARK: -
+
 /// A `Box` that doesn't change the value it wraps after instantiation.
 public final class ImmutableBox<Wrapped>: Box {
 	/// The wrapped value.
@@ -70,6 +76,8 @@ public final class ImmutableBox<Wrapped>: Box {
 		self.value = value
 	}
 }
+
+// MARK: -
 
 /// A `Box` that can change the value it wraps after instantiation.
 public final class MutableBox<Wrapped>: Box {
