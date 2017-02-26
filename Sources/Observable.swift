@@ -155,6 +155,14 @@ extension Observable {
 	}
 }
 
+// MARK: - ==
+
+extension Observable where Observed: Equatable {
+	public static func == (lhs: Observable, rhs: Observable) -> Bool {
+		return lhs.value == rhs.value
+	}
+}
+
 // MARK: -
 
 /// An empty reference. It's only purpose is to be used to subscribe to an

@@ -114,6 +114,15 @@ extension Synchronized {
 	}
 }
 
+// MARK: - ==
+
+extension Synchronized where Wrapped: Equatable {
+	public static func == (lhs: Synchronized, rhs: Synchronized) -> Bool {
+		guard lhs !== rhs else { return true }
+		return lhs.value == rhs.value
+	}
+}
+
 // MARK: -
 
 private enum _Lock {

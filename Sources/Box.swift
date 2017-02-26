@@ -61,6 +61,12 @@ extension Box {
 	}
 }
 
+// MARK: - ==
+
+public func == <LeftBox: Box, RightBox: Box> (lhs: LeftBox, rhs: RightBox) -> Bool where LeftBox.Wrapped: Equatable, LeftBox.Wrapped == RightBox.Wrapped {
+	return lhs.value == rhs.value
+}
+
 // MARK: -
 
 /// A `Box` that doesn't change the value it wraps after instantiation.
