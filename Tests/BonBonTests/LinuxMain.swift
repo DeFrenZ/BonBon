@@ -6,5 +6,6 @@ XCTMain([
      testCase(SynchronizedTests.allTests),
      testCase(ResultTests.allTests),
      testCase(BoxTests.allTests),
+     testCase(ValidatedTests.allTests),
      testCase(LockTests.allTests),
 ])
