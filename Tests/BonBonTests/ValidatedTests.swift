@@ -17,42 +17,55 @@ final class ValidatedTests: XCTestCase {
 
 	// MARK: Unit tests
 	
-	func test_whenCreatingAValidatedValue_andTheValidationPasses_thenItSucceeds() {
-		let validated = try? Validated(value: validValue, validator: validator)
-		XCTAssertNotNil(validated)
+	func test_whenCreatingAValidatedValue_andTheValidationPasses_thenItSucceeds_andItHasTheSameValue() {
+		do {
+			let validated = try Validated(value: validValue, validator: validator)
+			XCTAssertEqual(validated.value, validValue)
+		} catch {
+			XCTFail()
+		}
 	}
 
 	func test_whenCreatingAValidatedValue_andTheValidationFails_thenItFails() {
-		let validated = try? Validated(value: invalidValue, validator: validator)
-		XCTAssertNil(validated)
+		do {
+			_ = try Validated(value: invalidValue, validator: validator)
+			XCTFail()
+		} catch is ValidationError<Int> {
+		} catch {
+			XCTFail()
+		}
 	}
 
-	func test_whenCreatingAValidatedValue_andTheValidationPasses_thenItHasTheSameValue() {
-		let validated = try? Validated(value: validValue, validator: validator)
-		XCTAssertEqual(validated?.value, validValue)
-	}
-
-	func test_whenSettingANewValue_andTheValidationPasses_thenItHasTheNewValue() {
+	func test_whenSettingANewValue_andTheValidationPasses_thenItSucceeds_andItHasTheNewValue() {
 		var validated = self.validated
-		try? validated.set(to: anotherValidValue)
+		do {
+			try validated.set(to: anotherValidValue)
+		} catch {
+			XCTFail()
+		}
 		XCTAssertEqual(validated.value, anotherValidValue)
 	}
 
-	func test_whenSettingANewValue_andTheValidationFails_thenItKeepsTheOldValue() {
+	func test_whenSettingANewValue_andTheValidationFails_thenItFails_andItKeepsTheOldValue() {
 		var validated = self.validated
-		try? validated.set(to: invalidValue)
-		XCTAssertEqual(validated.value, validValue)
+		do {
+			try validated.set(to: invalidValue)
+			XCTFail()
+		} catch is ValidationError<Int> {
+			XCTAssertEqual(validated.value, validValue)
+		} catch {
+			XCTFail()
+		}
 	}
 
 	// MARK: Linux support
 
 	static var allTests: [(String, (ValidatedTests) -> () throws -> Void)] {
 		return [
-			("test_whenCreatingAValidatedValue_andTheValidationPasses_thenItSucceeds", test_whenCreatingAValidatedValue_andTheValidationPasses_thenItSucceeds),
+			("test_whenCreatingAValidatedValue_andTheValidationPasses_thenItSucceeds_andItHasTheSameValue", test_whenCreatingAValidatedValue_andTheValidationPasses_thenItSucceeds_andItHasTheSameValue),
 			("test_whenCreatingAValidatedValue_andTheValidationFails_thenItFails", test_whenCreatingAValidatedValue_andTheValidationFails_thenItFails),
-			("test_whenCreatingAValidatedValue_andTheValidationPasses_thenItHasTheSameValue", test_whenCreatingAValidatedValue_andTheValidationPasses_thenItHasTheSameValue),
-			("test_whenSettingANewValue_andTheValidationPasses_thenItHasTheNewValue", test_whenSettingANewValue_andTheValidationPasses_thenItHasTheNewValue),
-			("test_whenSettingANewValue_andTheValidationFails_thenItKeepsTheOldValue", test_whenSettingANewValue_andTheValidationFails_thenItKeepsTheOldValue),
+			("test_whenSettingANewValue_andTheValidationPasses_thenItSucceeds_andItHasTheNewValue", test_whenSettingANewValue_andTheValidationPasses_thenItSucceeds_andItHasTheNewValue),
+			("test_whenSettingANewValue_andTheValidationFails_thenItFails_andItKeepsTheOldValue", test_whenSettingANewValue_andTheValidationFails_thenItFails_andItKeepsTheOldValue),
 		]
 	}
 }
