@@ -20,19 +20,19 @@ final class ValidatedTests: XCTestCase {
 	func test_whenCreatingAValidatedValue_andTheValidationPasses_thenItSucceeds_andItHasTheSameValue() {
 		do {
 			let validated = try Validated(value: validValue, validator: validator)
-			XCTAssertEqual(validated.value, validValue)
+			XCTAssertEqual(validated.value, validValue, "The object should have the same value.")
 		} catch {
-			XCTFail()
+			XCTFail("The creation shouldn't throw an error.")
 		}
 	}
 
 	func test_whenCreatingAValidatedValue_andTheValidationFails_thenItFails() {
 		do {
 			_ = try Validated(value: invalidValue, validator: validator)
-			XCTFail()
+			XCTFail("The creation should throw an error.")
 		} catch is ValidationError<Int> {
 		} catch {
-			XCTFail()
+			XCTFail("The creation should throw a validation error, instead of \(error).")
 		}
 	}
 
@@ -41,20 +41,20 @@ final class ValidatedTests: XCTestCase {
 		do {
 			try validated.set(to: anotherValidValue)
 		} catch {
-			XCTFail()
+			XCTFail("The set shouldn't throw an error.")
 		}
-		XCTAssertEqual(validated.value, anotherValidValue)
+		XCTAssertEqual(validated.value, anotherValidValue, "The object should have the new value.")
 	}
 
 	func test_whenSettingANewValue_andTheValidationFails_thenItFails_andItKeepsTheOldValue() {
 		var validated = self.validated
 		do {
 			try validated.set(to: invalidValue)
-			XCTFail()
+			XCTFail("The set should throw an error.")
 		} catch is ValidationError<Int> {
-			XCTAssertEqual(validated.value, validValue)
+			XCTAssertEqual(validated.value, validValue, "The object should have the old value.")
 		} catch {
-			XCTFail()
+			XCTFail("The set should throw a validation error, instead of \(error).")
 		}
 	}
 
