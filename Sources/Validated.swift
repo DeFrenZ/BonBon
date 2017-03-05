@@ -60,41 +60,101 @@ public struct Validated<Value> {
 // MARK: - Convenience validators
 
 extension Validated {
+	/// Create a validated value wrapping the given one if it satisfies the
+	/// given predicate, or throws an error otherwise.
+	///	- seealso: `Validated.init(value:validator:)`.
+	///
+	///	- parameter value: The value to wrap.
+	///	- parameter predicate: The condition used to check on the given value.
+	///		It will be used to check on further changes as well.
+	///	- throws: `ValidationError` if the validation fails.
+	///	- returns: A `Validated` object if the validation succeeds, or throws an
+	///		error otherwise.
 	public init(value: Value, predicate: @escaping (Value) -> Bool) throws {
-		let validator: Validator = {
-			guard predicate($0) else { throw valueIsNotValidError }
+		let validator: Validator = { value in
+			guard predicate(value) else {
+				throw ValueIsNotValid(value)
+			}
 		}
 		try self.init(value: value, validator: validator)
 	}
 
+	/// Create a validated value wrapping the given one if it's contained in the
+	/// given set of values, or throws an error otherwise.
+	///	- seealso: `Validated.init(value:validator:)`.
+	///
+	///	- parameter value: The value to wrap.
+	///	- parameter predicate: The set used to check for containment on the
+	///		given value. It will be used to check on further changes as well.
+	///	- throws: `ValidationError` if the validation fails.
+	///	- returns: A `Validated` object if the validation succeeds, or throws an
+	///		error otherwise.
 	public init <S: SetAlgebra> (value: Value, validValues: S) throws where S.Element == Value {
-		let validator: Validator = {
-			guard validValues.contains($0) else { throw ValueIsNotContainedInSet(validValues) }
+		let validator: Validator = { value in
+			guard validValues.contains(value) else {
+				throw ValueIsNotContainedInSet(value: value, set: validValues)
+			}
 		}
 		try self.init(value: value, validator: validator)
 	}
 }
 
 extension Validated where Value: Equatable {
+	/// Create a validated value wrapping the given one if it's contained in the
+	/// given sequence of values, or throws an error otherwise.
+	///	- seealso: `Validated.init(value:validator:)`.
+	///
+	///	- parameter value: The value to wrap.
+	///	- parameter predicate: The sequence used to check for containment on the
+	///		given value. It will be used to check on further changes as well.
+	///	- throws: `ValidationError` if the validation fails.
+	///	- returns: A `Validated` object if the validation succeeds, or throws an
+	///		error otherwise.
 	public init <S: Sequence> (value: Value, validValues: S) throws where S.Iterator.Element == Value {
-		let validator: Validator = {
-			guard validValues.contains($0) else { throw ValueIsNotContainedInSequence(validValues) }
+		let validator: Validator = { value in
+			guard validValues.contains(value) else {
+				throw ValueIsNotContainedInSequence(value: value, sequence: validValues)
+			}
 		}
 		try self.init(value: value, validator: validator)
 	}
 }
 
 extension Validated where Value: Comparable {
+	/// Create a validated value wrapping the given one if it's contained in the
+	/// given range of values, or throws an error otherwise.
+	///	- seealso: `Validated.init(value:validator:)`.
+	///
+	///	- parameter value: The value to wrap.
+	///	- parameter predicate: The range used to check for containment on the
+	///		given value. It will be used to check on further changes as well.
+	///	- throws: `ValidationError` if the validation fails.
+	///	- returns: A `Validated` object if the validation succeeds, or throws an
+	///		error otherwise.
 	public init(value: Value, validRange: Range<Value>) throws {
-		let validator: Validator = {
-			guard validRange.contains($0) else { throw ValueIsNotContainedInRange.halfOpenRange(validRange) }
+		let validator: Validator = { value in
+			guard validRange.contains(value) else {
+				throw ValueIsNotContainedInRange.halfOpenRange(value: value, range: validRange)
+			}
 		}
 		try self.init(value: value, validator: validator)
 	}
 
+	/// Create a validated value wrapping the given one if it's contained in the
+	/// given range of values, or throws an error otherwise.
+	///	- seealso: `Validated.init(value:validator:)`.
+	///
+	///	- parameter value: The value to wrap.
+	///	- parameter predicate: The range used to check for containment on the
+	///		given value. It will be used to check on further changes as well.
+	///	- throws: `ValidationError` if the validation fails.
+	///	- returns: A `Validated` object if the validation succeeds, or throws an
+	///		error otherwise.
 	public init(value: Value, validRange: ClosedRange<Value>) throws {
-		let validator: Validator = {
-			guard validRange.contains($0) else { throw ValueIsNotContainedInRange.closedRange(validRange) }
+		let validator: Validator = { value in
+			guard validRange.contains(value) else {
+				throw ValueIsNotContainedInRange.closedRange(value: value, range: validRange)
+			}
 		}
 		try self.init(value: value, validator: validator)
 	}
@@ -116,24 +176,75 @@ public struct ValidationError<Value>: Error {
 
 /// A convenience error to use when a validation fails, but no information about
 /// the failure is available.
-public struct ValueIsNotValidError: Error {}
-public let valueIsNotValidError: ValueIsNotValidError = .init()
+public struct ValueIsNotValid<Value>: Error {
+	/// The value that didn't pass the validation.
+	public var value: Value
 
+	/// Create a validation error with the given value.
+	///
+	///	- parameter value: The value that didn't pass the validation.
+	///	- returns: A validation error with the given value.
+	public init(_ value: Value) {
+		self.value = value
+	}
+}
+
+/// A convenience error to use when the containment check for a value in a set
+/// fails.
 public struct ValueIsNotContainedInSet<S: SetAlgebra>: Error {
+	/// The type of the value that didn't pass the validation.
+	public typealias Value = S.Element
+
+	/// The value that didn't pass the validation.
+	public var value: Value
+	/// The set in which the value was not contained.
 	public var set: S
-	public init(_ set: S) {
+
+	/// Create a containment validation error with the given value and set.
+	///
+	///	- parameter value: The value that didn't pass the validation.
+	///	- parameter set: The set used for the validation.
+	///	- returns: A validation error with the given value and set.
+	public init(value: Value, set: S) {
+		self.value = value
 		self.set = set
 	}
 }
 
+/// A convenience error to use when the containment check for a value in a
+/// sequence fails.
 public struct ValueIsNotContainedInSequence<S: Sequence>: Error {
+	/// The type of the value that didn't pass the validation.
+	public typealias Value = S.Iterator.Element
+
+	/// The value that didn't pass the validation.
+	public var value: Value
+	/// The sequence in which the value was not contained.
 	public var sequence: S
-	public init(_ sequence: S) {
+
+	/// Create a containment validation error with the given value and sequence.
+	///
+	///	- parameter value: The value that didn't pass the validation.
+	///	- parameter set: The sequence used for the validation.
+	///	- returns: A validation error with the given value and sequence.
+	public init(value: Value, sequence: S) {
+		self.value = value
 		self.sequence = sequence
 	}
 }
 
+/// A convenience error to use when the containment check for a value in a range
+/// fails.
 public enum ValueIsNotContainedInRange<Value: Comparable>: Error {
-	case halfOpenRange(Range<Value>)
-	case closedRange(ClosedRange<Value>)
+	/// An error where a value was not contained in an half open range.
+	///
+	///	- value: The value that didn't pass the validation.
+	///	- range: The range used for the validation.
+	case halfOpenRange(value: Value, range: Range<Value>)
+
+	/// An error where a value was not contained in an closed range.
+	///
+	///	- value: The value that didn't pass the validation.
+	///	- range: The range used for the validation.
+	case closedRange(value: Value, range: ClosedRange<Value>)
 }
