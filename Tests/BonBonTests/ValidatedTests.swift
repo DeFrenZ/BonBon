@@ -18,43 +18,44 @@ final class ValidatedTests: XCTestCase {
 	// MARK: Unit tests
 	
 	func test_whenCreatingAValidatedValue_andTheValidationPasses_thenItSucceeds_andItHasTheSameValue() {
-		do {
-			let validated = try Validated(value: validValue, validator: validator)
-			XCTAssertEqual(validated.value, validValue, "The object should have the same value.")
-		} catch {
-			XCTFail("The creation shouldn't throw an error.")
-		}
+		let validated = tryAndAssertDoesntThrow(try Validated(value: validValue, validator: validator))
+		XCTAssertEqual(validated?.value, validValue, "The object should have the same value.")
 	}
 
 	func test_whenCreatingAValidatedValue_andTheValidationFails_thenItFails() {
-		do {
-			_ = try Validated(value: invalidValue, validator: validator)
-			XCTFail("The creation should throw an error.")
-		} catch is ValidationError<Int> {
-		} catch {
-			XCTFail("The creation should throw a validation error, instead of \(error).")
-		}
+		tryAndAssertThrowsValidationError(try Validated(value: invalidValue, validator: validator))
 	}
 
 	func test_whenSettingANewValue_andTheValidationPasses_thenItSucceeds_andItHasTheNewValue() {
 		var validated = self.validated
-		do {
-			try validated.set(to: anotherValidValue)
-		} catch {
-			XCTFail("The set shouldn't throw an error.")
-		}
+		tryAndAssertDoesntThrow(try validated.set(to: anotherValidValue))
 		XCTAssertEqual(validated.value, anotherValidValue, "The object should have the new value.")
 	}
 
 	func test_whenSettingANewValue_andTheValidationFails_thenItFails_andItKeepsTheOldValue() {
 		var validated = self.validated
+		tryAndAssertThrowsValidationError(try validated.set(to: invalidValue))
+		XCTAssertEqual(validated.value, validValue, "The object should have the old value.")
+	}
+
+	// MARK: - Private utilities
+
+	private func tryAndAssertDoesntThrow <T> (_ function: @autoclosure () throws -> T, file: StaticString = #file, line: UInt = #line) -> T? {
 		do {
-			try validated.set(to: invalidValue)
-			XCTFail("The set should throw an error.")
-		} catch is ValidationError<Int> {
-			XCTAssertEqual(validated.value, validValue, "The object should have the old value.")
+			return try function()
 		} catch {
-			XCTFail("The set should throw a validation error, instead of \(error).")
+			XCTFail("The function shouldn't throw an error.", file: file, line: line)
+			return nil
+		}
+	}
+
+	private func tryAndAssertThrowsValidationError <T> (_ function: @autoclosure () throws -> T, file: StaticString = #file, line: UInt = #line) {
+		do {
+			_ = try function()
+			XCTFail("The function should throw an error.", file: file, line: line)
+		} catch is ValidationError<Int> {
+		} catch {
+			XCTFail("The function should throw a validation error, instead of \(error).", file: file, line: line)
 		}
 	}
 
