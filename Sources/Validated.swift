@@ -57,6 +57,49 @@ public struct Validated<Value> {
 	}
 }
 
+// MARK: - Convenience validators
+
+extension Validated {
+	public init(value: Value, predicate: @escaping (Value) -> Bool) throws {
+		let validator: Validator = {
+			guard predicate($0) else { throw valueIsNotValidError }
+		}
+		try self.init(value: value, validator: validator)
+	}
+
+	public init <S: SetAlgebra> (value: Value, validValues: S) throws where S.Element == Value {
+		let validator: Validator = {
+			guard validValues.contains($0) else { throw ValueIsNotContainedInSet(validValues) }
+		}
+		try self.init(value: value, validator: validator)
+	}
+}
+
+extension Validated where Value: Equatable {
+	public init <S: Sequence> (value: Value, validValues: S) throws where S.Iterator.Element == Value {
+		let validator: Validator = {
+			guard validValues.contains($0) else { throw ValueIsNotContainedInSequence(validValues) }
+		}
+		try self.init(value: value, validator: validator)
+	}
+}
+
+extension Validated where Value: Comparable {
+	public init(value: Value, validRange: Range<Value>) throws {
+		let validator: Validator = {
+			guard validRange.contains($0) else { throw ValueIsNotContainedInRange.halfOpenRange(validRange) }
+		}
+		try self.init(value: value, validator: validator)
+	}
+
+	public init(value: Value, validRange: ClosedRange<Value>) throws {
+		let validator: Validator = {
+			guard validRange.contains($0) else { throw ValueIsNotContainedInRange.closedRange(validRange) }
+		}
+		try self.init(value: value, validator: validator)
+	}
+}
+
 // MARK: -
 
 /// The error thrown by `Validated` when using values that doesn't pass
@@ -69,9 +112,28 @@ public struct ValidationError<Value>: Error {
 	public var validatorError: Error
 }
 
-// MARK: -
+// MARK: - Convenience errors
 
 /// A convenience error to use when a validation fails, but no information about
 /// the failure is available.
 public struct ValueIsNotValidError: Error {}
 public let valueIsNotValidError: ValueIsNotValidError = .init()
+
+public struct ValueIsNotContainedInSet<S: SetAlgebra>: Error {
+	public var set: S
+	public init(_ set: S) {
+		self.set = set
+	}
+}
+
+public struct ValueIsNotContainedInSequence<S: Sequence>: Error {
+	public var sequence: S
+	public init(_ sequence: S) {
+		self.sequence = sequence
+	}
+}
+
+public enum ValueIsNotContainedInRange<Value: Comparable>: Error {
+	case halfOpenRange(Range<Value>)
+	case closedRange(ClosedRange<Value>)
+}
